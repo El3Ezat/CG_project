@@ -16,17 +16,34 @@ void printme(char *string,float x,float y,float z)
 void init()
 {
    glClearColor (0.0, 0.0, 0.0, 0.0);
+  // gluOrtho2D (0.0,100.0,0.0, 100.0);
 }
 
+void reshape(int w,int h)
+{
+	glViewport(0.0,0.0,w,h);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	if(w<=h)
+		glOrtho(-4.0,4.0,-4.0*(GLfloat)h/(GLfloat)w,4.0*(GLfloat)w/(GLfloat)h,-0.5,0.5);
+	glMatrixMode(GL_MODELVIEW);
+}
 void drawObjects(GLenum mode)
 {
 	if(mode == GL_SELECT) glLoadName(1);
 	glColor3f(1.0, 0.0, 0.0);
-	glRectf(0.5, -0.5, 1.5, 0.5);
-	//glTranslatef(5.0,0.3,0.0);
+	glRectf(10.0, 30.0, 30.0, 50.0);
 	if(mode == GL_SELECT) glLoadName(2);
 	glColor3f(0.0, 0.0, 1.0);
 	glRectf(-1.0, -0.5, 0, 0.5);
+	if(mode == GL_SELECT) glLoadName(3);
+	glColor3f(0.0, 0.0, 1.0);
+	glRectf(-1.0, -0.5, 0, 0.5);
+	if(mode == GL_SELECT) glLoadName(4);
+	glColor3f(0.0, 0.0, 1.0);
+	glRectf(-1.0, -0.5, 0, 0.5);
+
+
 	if(glob==1)
 		{
 			glColor3f(1.0,0.0,0.0);
@@ -51,9 +68,9 @@ void display()
 	glClear(GL_COLOR_BUFFER_BIT);
 	drawObjects(GL_RENDER);
 	glColor3f(1.0,1.0,1.0);
-	printme("Click on the!",-2.0,1.8,0);
+	printme("Click on the!",20.0,80.0,0);
 	glColor3f(0.0,0.0,1.0);
-	printme("Red Square!",-1.0,1.8,0);
+	printme("Red Square!",45.0,80.0,0);
 	glFlush();
 }
 
@@ -101,44 +118,32 @@ void mouse(int button, int state, int x, int y)
 
    if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) 
    {
-   glGetIntegerv (GL_VIEWPORT, viewport);
+		glGetIntegerv (GL_VIEWPORT, viewport);
 
-   glSelectBuffer (SIZE, selectBuf);
-   glRenderMode(GL_SELECT);
+		glSelectBuffer (SIZE, selectBuf);
+		glRenderMode(GL_SELECT);
 
-   glInitNames();
-   glPushName(0);
+		glInitNames();
+		glPushName(0);
 
-   glMatrixMode (GL_PROJECTION);
-   glPushMatrix ();
-   glLoadIdentity ();
+		glMatrixMode (GL_PROJECTION);
+		glPushMatrix ();
+		glLoadIdentity ();
 /*  create 5x5 pixel picking region near cursor location	*/
-   gluPickMatrix ((GLdouble) x, (GLdouble) (viewport[3] - y), 
-                  5.0, 5.0, viewport);
-   gluOrtho2D (-2.0, 2.0, -2.0, 2.0);
-   drawObjects(GL_SELECT);
-   glMatrixMode (GL_PROJECTION);
-   glPopMatrix ();
-   glFlush ();
-   hits = glRenderMode (GL_RENDER);
-   processHits (hits, selectBuf);
-   if(glob==1 || glob==0 || hits==0)
-	   drawObjects(GL_RENDER);
+		gluPickMatrix ((GLdouble) x, (GLdouble) (viewport[3] - y),5.0, 5.0, viewport);
+		gluOrtho2D (0.0, 100.0, 0.0, 100.0);
+		drawObjects(GL_SELECT);
+		glMatrixMode (GL_PROJECTION);
+		glPopMatrix ();
+		glFlush ();
+		hits = glRenderMode (GL_RENDER);
+		processHits (hits, selectBuf);
+		if(glob==1 || glob==0 || hits==0)
+			drawObjects(GL_RENDER);
    //printme("Red square!",-1.5,-1.5,0);
-   glutPostRedisplay();
+		glutPostRedisplay();
    }
 } 
-
-
-void reshape(int w, int h)
-{
-   glViewport(0, 0, w, h);
-   glMatrixMode(GL_PROJECTION);
-   glLoadIdentity();
-   gluOrtho2D (-2.0, 2.0, -2.0, 2.0);
-   glMatrixMode(GL_MODELVIEW);
-   glLoadIdentity();
-}
 
 void keyboard(unsigned char key, int x, int y)
 {
@@ -154,12 +159,12 @@ int main(int argc, char** argv)
 {
    glutInit(&argc, argv);
    glutInitDisplayMode (GLUT_SINGLE | GLUT_RGB);
-   glutInitWindowSize (500, 500);
+   glutInitWindowSize ( 800, 700);
    glutInitWindowPosition (100, 100);
    glutCreateWindow ("picking");
-   init ();
-   glutReshapeFunc (reshape);
+  // glutFullScreen(); 
    glutDisplayFunc(display); 
+   init ();
    glutMouseFunc (mouse);
    glutKeyboardFunc (keyboard);
    glutMainLoop();
