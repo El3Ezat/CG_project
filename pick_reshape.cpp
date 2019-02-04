@@ -52,22 +52,7 @@ void printme(char *string,float x,float y)
 }
 void eval_score()
 {
-	if(glob==0 && sel_sq==0)
-	{
-		printme("correct!",25.0,20.0);
-		score++;
-	}
-	else if(glob==1 && sel_sq==1)
-	{
-		printme("correct!",25.0,20.0);
-		score++;
-	}
-	else if(glob==2 && sel_sq==2)
-	{
-		printme("correct!",25.0,20.0);
-		score++;
-	}
-	else if(glob==3 && sel_sq==3)
+	if(glob == sel_sq)
 	{
 		printme("correct!",25.0,20.0);
 		score++;
